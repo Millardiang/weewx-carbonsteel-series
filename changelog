@@ -1,0 +1,61 @@
+weewx-carbonsteel-series
+
+v1.0.0  (30 September 2026)
+*   First release under the name weewx-carbonsteel-series (previously
+    developed as weewx-steelseries v3). Extension, report and options section
+    CarbonSteelSeries; service user.carbonsteelseries.CarbonSteelSeriesRealtime
+    configured in [CarbonSteelSeriesRealtime]. Skin and page folder 'CS'.
+*   Installing over a pre-release build ('SteelSeries', or an early v1.0.0 in
+    the 'ss' folder) carries its settings across automatically.
+*   Optional gauges page for the Seasons skin (carbonsteel-gauges.html):
+    Seasons title bar, stylesheet and wording, sharing the CS page's settings
+    and data. Adds one file to the Seasons folder (plus the title-bar button
+    below). The installer asks whether to add it (or pass --seasons=y|n).
+*   Optional gauges page for the Belchertown-new skin (carbonsteel/): generated
+    by Belchertown's own report, with its header, menu, theme switch and
+    footer; gauges shown as Belchertown-style cards that follow its light/dark
+    mode. Adds one template and two weewx.conf entries, both removed on
+    uninstall, plus the menu item below. The installer asks whether to add it (or pass --belchertown=y|n).
+*   "Live Gauges" links in the host skins' headers so visitors can find the
+    pages: a button beside RSS in the Seasons title bar (titlebar.inc) and an
+    item in the Belchertown menu (nav-menu-custom.inc, created from its example
+    if missing). Each is a marked block that only shows while its page is
+    installed; answering no removes it, and re-running never duplicates it.
+*   The Seasons and Belchertown pages leave out the CarbonSteel header (outlook
+    ticker, update counter, face/bezel/units switches): the host skin's own
+    header, theme and units apply. Seasons: always light, in the units of the
+    Seasons report. Belchertown: follows its light/dark mode and its units,
+    including its unit switcher (unit_switching = 1) as the visitor changes it.
+*   Belchertown page: when Belchertown shows live data over MQTT
+    (mqtt_websockets_enabled = 1), the gauges take their current readings from
+    the same broker and topic; realtime.json still supplies the day's figures
+    (read once a minute while MQTT is live) and takes over at once if MQTT
+    stops. Reads weewx-mqtt packets in any unit system.
+*   Styles split into gauges.css (page) and components.css (gauges); embed.css
+    scopes the components for pages inside other skins.
+*   Independent of the original SteelSeries Weather Gauges skin: separate
+    report, skin folder, web folder, live data file and visitor settings, so
+    both can be installed on the same station.
+*   Complete rewrite for WeeWX 5 and Python 3.9-3.13 (tested on WeeWX 5.5.2,
+    Python 3.13.7). Installs with `weectl extension install`.
+*   Realtime service writes realtime.json on every LOOP packet: current values,
+    today's highs/lows seeded from daily summaries, rain day/hour/24h/month/year,
+    10-minute wind average, gust and direction range, wind rose, 3-hour
+    pressure tendency.
+*   Vector SVG gauges drawn with D3 v7, in the style of the original SteelSeries
+    gauges: chrome or black-metal bezel; beige, white, anthracite or carbon-fibre
+    face; light/dark themes; visitor-selectable face, bezel and units.
+*   Header with station coordinates, status LED, Open-Meteo outlook ticker and
+    seconds-since-update counter.
+*   Optional 24-hour sparklines and detail charts, and a Year at a glance
+    calendar heat-map; the installer asks whether to show each
+    (or pass --sparklines=y|n --calendar=y|n).
+*   Licensed GPL v3 or later.
+
+History of the original weewx-steelseries extension (Gary Roderick), on which
+this project was originally based:
+
+v2.6.3
+*   upgraded to SteelSeries Weather Gauges v2.6.3
+v2.6.1
+*   initial release as a weeWX extension

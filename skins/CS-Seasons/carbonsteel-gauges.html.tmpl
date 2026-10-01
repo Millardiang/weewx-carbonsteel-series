@@ -1,0 +1,177 @@
+## weewx-carbonsteel-series: live gauges page for the Seasons skin.
+## The <head>, title bar, widgets and identifier follow the Seasons skin
+## (Copyright Tom Keffer, Matthew Wall, GPLv3) so the page looks like part of it.
+#errorCatcher Echo
+#encoding UTF-8
+#set $show_rss = $to_bool($DisplayOptions.get('show_rss', True))
+#set $show_reports = $to_bool($DisplayOptions.get('show_reports', True))
+<!DOCTYPE html>
+<html lang="$cs_lang" data-theme="light">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>$station.location</title>
+    <link rel="icon" type="image/png" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="seasons.css"/>
+    <link rel="stylesheet" type="text/css" href="${ss_base_url}css/gauges.css?v=$ss_version"/>
+    <link rel="stylesheet" type="text/css" href="${ss_base_url}css/components.css?v=$ss_version"/>
+    #if $station.station_url
+    <link rel="canonical" href="$station.station_url/$filename" />
+    #end if
+    <script src="seasons.js"></script>
+    <script id="ss-config" type="application/json">$ss_config_json</script>
+    <style>
+      /* Fit the gauges into the Seasons look: its font, colours and widget titles. */
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: var(--background-color); --panel: var(--background-color);
+        --panel-2: var(--element-background-color); --line: var(--cell-border-color);
+        --ink: #000; --ink-2: #333; --muted: #777; --accent: var(--highlight-color);
+      }
+      body.cs-seasons {
+        font: 16px 'Open Sans', arial, sans-serif; color: #000;
+        background-color: var(--background-color);
+        -webkit-font-smoothing: auto; font-variant-numeric: normal;
+      }
+      .cs-seasons button { font-family: inherit; }
+      .cs-seasons .widget_title { position: relative; }
+      .cs-seasons #live_widget .gauges { margin-top: 12px; }
+
+      /* each gauge as a small Seasons widget */
+      .cs-seasons .gauges { gap: 22px 28px; }
+      .cs-seasons .card {
+        background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0;
+      }
+      .cs-seasons .card-head {
+        border-bottom: 2px solid var(--section-border-color); padding: 2px 10px; min-height: 0; margin-bottom: 6px;
+      }
+      .cs-seasons .card-title {
+        font-size: 100%; font-weight: bold; color: #000; text-transform: none; letter-spacing: 0;
+      }
+      .cs-seasons .card select {
+        background-color: var(--background-color); border: 1px solid var(--section-border-color);
+        border-radius: 3px; color: #000; font-size: 80%;
+      }
+      .cs-seasons .card-note, .cs-seasons .card-foot { color: #555; font-size: 80%; }
+
+      /* the calendar as a Seasons widget */
+      .cs-seasons #calendar-panel { background: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; margin-top: 30px; }
+      .cs-seasons #calendar-panel .panel-head {
+        border-bottom: 2px solid var(--section-border-color); padding: 2px 10px; margin-bottom: 10px;
+      }
+      .cs-seasons #calendar-panel h2 { font-size: 100%; font-weight: bold; }
+      .cs-seasons .seg { background: none; border: 0; padding: 0; gap: 4px; }
+      .cs-seasons .seg button {
+        font-size: 80%; padding: 2px 8px; border-radius: 0; color: #000;
+        border: 1px solid var(--section-border-color); background: var(--background-color);
+      }
+      .cs-seasons .seg button[aria-selected="true"] {
+        background: var(--button-background-color); box-shadow: none; border-bottom: 3px solid var(--highlight-color);
+      }
+      .cs-seasons #identifier_widget { margin-top: 30px; }
+    </style>
+  </head>
+
+  <body class="cs-seasons">
+    <div id="title_bar">
+      <div id="title">
+        <h1 class="page_title" id="station-name">$station.location</h1>
+        <p class="lastupdate">$current.dateTime</p>
+      </div>
+#if $show_rss
+      <div id="rss_link"><a href="rss.xml">RSS</a></div>
+#end if
+      <div id="carbonsteel_link" style="float:right; margin-top:6px; margin-right:10px; padding-left:8px; padding-right:8px; background-color:var(--background-color); border:1px solid var(--section-border-color); border-radius:5px;"><a href="carbonsteel-gauges.html">Live Gauges</a></div>
+#if $show_reports
+      <div id="reports">
+        $cs_text("Monthly Reports"):
+        <select name="reports" onchange="openTabularFile(value)">
+          #for $monthYear in $SummaryByMonth
+          <option value="$monthYear">$monthYear</option>
+          #end for
+          <option selected>- $cs_text("select month") -</option>
+        </select>
+        <br/>
+        $cs_text("Yearly Reports"):
+        <select name="reports" onchange="openTabularFile(value)">
+          #for $yr in $SummaryByYear
+          <option value="$yr">$yr</option>
+          #end for
+          <option selected>- $cs_text("select year") -</option>
+        </select>
+        <br/>
+      </div>
+#end if
+    </div>
+
+    <div id="contents">
+      <p><a href="index.html">&#10096; $cs_text("Current Conditions")</a></p>
+
+      <div id="live_widget" class="widget">
+        <div class="widget_title">
+          Live Gauges
+        </div>
+        <div class="widget_contents">
+          <section class="gauges" id="gauges" aria-label="Live gauges"></section>
+        </div>
+      </div>
+
+      <div class="widget panel" id="calendar-panel" aria-labelledby="cal-title" hidden>
+        <div class="panel-head">
+          <h2 id="cal-title">Year at a Glance</h2>
+          <div class="seg" id="cal-metric" role="tablist" aria-label="Calendar measure"></div>
+        </div>
+        <div class="calendar-scroll"><div id="calendar"></div></div>
+        <div class="cal-foot"><div id="cal-legend"></div><p id="cal-summary" class="muted"></p></div>
+      </div>
+
+      <div id="identifier_widget" class="widget">
+        <div class="widget_title">
+        </div>
+        <div class="widget_contents">
+        <table>
+          <tr>
+            <td class="label">$cs_text("Latitude")</td>
+            <td class="data">$station.latitude[0]&deg; $station.latitude[1]' $station.latitude[2]</td>
+          </tr>
+          <tr>
+            <td class="label">$cs_text("Longitude")</td>
+            <td class="data">$station.longitude[0]&deg; $station.longitude[1]' $station.longitude[2]</td>
+          </tr>
+          <tr>
+            <td class="label">$cs_text("Altitude", "Geographical")</td>
+            <td class="data">$station.altitude</td>
+          </tr>
+          <tr>
+            <td class="label">WeeWX</td>
+            <td class="data">$station.version</td>
+          </tr>
+          <tr>
+            <td class="label">Gauges</td>
+            <td class="data">weewx-carbonsteel-series $ss_version</td>
+          </tr>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <p class="footnote">
+      $cs_text("This station is controlled by <a href='https://weewx.com'>WeeWX</a>, an experimental weather software system written in Python.")
+    </p>
+
+    <dialog id="detail" aria-labelledby="detail-title">
+      <form method="dialog" class="detail-head">
+        <h2 id="detail-title">History</h2>
+        <button class="icon-btn" value="close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+      <div id="detail-chart"></div>
+    </dialog>
+
+    <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+    <script src="${ss_base_url}js/d3.min.js?v=7.9.0"></script>
+    <script src="${ss_base_url}js/gauges.js?v=$ss_version"></script>
+  </body>
+</html>
