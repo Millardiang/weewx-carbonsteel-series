@@ -6,6 +6,9 @@ It started as a modernisation of the 2017 weewx-steelseries extension, which pac
 
 Current release: **v1.0.1**.
 
+Desktop, light theme<img width="736" height="727" alt="Screenshot 2026-10-02 at 18 52 08" src="https://github.com/user-attachments/assets/d814c21b-2d99-41bd-ac0e-1f509099680e" />
+
+
 Desktop, dark theme<img width="736" height="727" alt="screenshot" src="https://github.com/user-attachments/assets/24652a79-4c11-4314-9318-4ccdef5b7eec" />
 
 
