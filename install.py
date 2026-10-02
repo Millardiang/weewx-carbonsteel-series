@@ -6,13 +6,13 @@
 #    Software Foundation; either version 3 of the License, or (at your option)
 #    any later version.
 #
-#    Install with:   weectl extension install weewx-carbonsteel-series-v1.0.0.zip
+#    Install with:   weectl extension install weewx-carbonsteel-series-v1.0.1.zip
 #    Remove with:    weectl extension uninstall CarbonSteelSeries
 #
 #    The installer asks whether to show the sparklines and the "Year at a
 #    glance" calendar. To answer without prompting (scripts, --yes):
 #
-#        weectl extension install weewx-carbonsteel-series-v1.0.0.zip --yes \
+#        weectl extension install weewx-carbonsteel-series-v1.0.1.zip --yes \
 #            --sparklines=n --calendar=y
 #
 import os
@@ -23,7 +23,7 @@ import weewx
 from weeutil.weeutil import y_or_n
 from weecfg.extension import ExtensionInstaller
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 REPORT = "CarbonSteelSeries"      # extension, report and options section name
 OLD_NAME = "SteelSeries"         # name used by the pre-release builds
 SKIN = "CS"                      # skin folder and page folder

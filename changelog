@@ -1,5 +1,11 @@
 weewx-carbonsteel-series
 
+v1.0.1  (2 October 2026)
+*   Belchertown page: the Nautical unit choice is now the ICAO unit set:
+    wind in knots, pressure in hPa and cloud base in feet (cloud base was
+    in metres). The set is named 'icao' in gauges.js; Belchertown's
+    'nautical' setting maps to it, so visitors' saved choices keep working.
+
 v1.0.0  (30 September 2026)
 *   First release under the name weewx-carbonsteel-series (previously
     developed as weewx-steelseries v3). Extension, report and options section

@@ -174,8 +174,11 @@
     metric:      { group_temperature: 'degree_C', group_speed: 'km_per_hour',      group_pressure: 'hPa',  group_rain: 'mm',   group_altitude: 'meter' },
     scandinavia: { group_temperature: 'degree_C', group_speed: 'meter_per_second', group_pressure: 'hPa',  group_rain: 'mm',   group_altitude: 'meter' },
     canada:      { group_temperature: 'degree_C', group_speed: 'km_per_hour',      group_pressure: 'kPa',  group_rain: 'mm',   group_altitude: 'meter' },
-    nautical:    { group_temperature: 'degree_C', group_speed: 'knot',             group_pressure: 'hPa',  group_rain: 'mm',   group_altitude: 'meter' }
+    // ICAO units: speed kt, pressure / altimeter setting hPa, altitude (cloud base) ft.
+    // 'nautical' is the key Belchertown-new stores for this choice; 'icao' is accepted too.
+    icao:        { group_temperature: 'degree_C', group_speed: 'knot',             group_pressure: 'hPa',  group_rain: 'mm',   group_altitude: 'foot' }
   };
+  BT_SYSTEMS.nautical = BT_SYSTEMS.icao;
   function hostUnits() {
     let units = Object.assign({}, CFG.display_units || {});
     if (CFG.unit_switcher === 'belchertown' && window.BU_UNIT_SWITCHER_ENABLED === true) {
