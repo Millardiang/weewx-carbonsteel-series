@@ -4,9 +4,12 @@ Live weather gauges for **WeeWX 5** and **Python 3.13**, with chrome and carbon-
 
 It started as a modernisation of the 2017 weewx-steelseries extension, which packaged Mark Crossley's canvas-based SteelSeries Weather Gauges, and is now a complete rewrite: sharp vector gauges drawn with D3, a live feed written on every LOOP packet, history charts and a year-at-a-glance calendar.
 
-Current release: **v1.0.0**.
+## Demos
 
-![Desktop, dark theme](docs/screenshot.png)
+- Standalone https://steepleclaydonweather.uk/CS/
+- New-Belchertown https://steepleclaydonweather.uk/new-belchertown/carbonsteel/
+- Seasons https://steepleclaydonweather.uk/seasons/carbonsteel-gauges.html
+- DivumWX https://steepleclaydonweather.uk/gauges.html
 
 ## What you get
 
