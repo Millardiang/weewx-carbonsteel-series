@@ -6,7 +6,8 @@ It started as a modernisation of the 2017 weewx-steelseries extension, which pac
 
 Current release: **v1.0.1**.
 
-![Desktop, dark theme](docs/screenshot.png)
+Desktop, dark theme<img width="736" height="727" alt="screenshot" src="https://github.com/user-attachments/assets/24652a79-4c11-4314-9318-4ccdef5b7eec" />
+
 
 ## What you get
 
