@@ -56,7 +56,7 @@ except ImportError:  # pragma: no cover
 
 log = logging.getLogger(__name__)
 
-VERSION = "1.0.1"
+VERSION = "1.0.0"
 SCHEMA_VERSION = 1
 REPORT_NAME = "CarbonSteelSeries"
 

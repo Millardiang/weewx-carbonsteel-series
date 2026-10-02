@@ -4,13 +4,9 @@ Live weather gauges for **WeeWX 5** and **Python 3.13**, with chrome and carbon-
 
 It started as a modernisation of the 2017 weewx-steelseries extension, which packaged Mark Crossley's canvas-based SteelSeries Weather Gauges, and is now a complete rewrite: sharp vector gauges drawn with D3, a live feed written on every LOOP packet, history charts and a year-at-a-glance calendar.
 
-Current release: **v1.0.1**.
+Current release: **v1.0.0**.
 
-Desktop, light theme<img width="736" height="727" alt="Screenshot 2026-10-02 at 18 52 08" src="https://github.com/user-attachments/assets/d814c21b-2d99-41bd-ac0e-1f509099680e" />
-
-
-Desktop, dark theme<img width="736" height="727" alt="screenshot" src="https://github.com/user-attachments/assets/24652a79-4c11-4314-9318-4ccdef5b7eec" />
-
+![Desktop, dark theme](docs/screenshot.png)
 
 ## What you get
 
@@ -33,7 +29,7 @@ Desktop, dark theme<img width="736" height="727" alt="screenshot" src="https://g
 
 ```bash
 # download the release zip, then:
-weectl extension install weewx-carbonsteel-series-v1.0.1.zip
+weectl extension install weewx-carbonsteel-series-v1.0.0.zip
 sudo systemctl restart weewx
 ```
 
@@ -46,7 +42,7 @@ Add a live gauges page to the Seasons skin (carbonsteel-gauges.html) (y/n) [y]?
 Add a live gauges page to the Belchertown-new skin (carbonsteel/) (y/n) [y]?
 ```
 
-The Seasons question defaults to yes only if your station runs a Seasons report; the Belchertown question is only asked if Belchertown-new is installed. To install without prompts, give the answers on the command line: `weectl extension install weewx-carbonsteel-series-v1.0.1.zip --yes --sparklines=n --calendar=y --seasons=y --belchertown=y`. On a reinstall with `--yes`, your earlier answers are kept. You can change them later with the `sparklines` and `calendar` options below, and the `enable` setting of `[[CarbonSteelSeriesSeasons]]`.
+The Seasons question defaults to yes only if your station runs a Seasons report; the Belchertown question is only asked if Belchertown-new is installed. To install without prompts, give the answers on the command line: `weectl extension install weewx-carbonsteel-series-v1.0.0.zip --yes --sparklines=n --calendar=y --seasons=y --belchertown=y`. On a reinstall with `--yes`, your earlier answers are kept. You can change them later with the `sparklines` and `calendar` options below, and the `enable` setting of `[[CarbonSteelSeriesSeasons]]`.
 
 The installer:
 
@@ -180,6 +176,8 @@ What the installer adds, and nothing else:
 
 The installer works out `carbonsteel_url` from your actual folders. If your web server maps folders differently (for example the CS pages live on another path or host), set it to the right relative path or a full URL. Both entries survive a Belchertown-new upgrade, and uninstalling this extension (or re-running the installer and answering no) removes them and the template again. The page uses the same options as the main `CS` page. You can also set `carbonsteel_title` under `[[[Extras]]]` to change its heading (default "Live Gauges").
 
+**The CarbonSteelSeries report must run.** The Seasons and Belchertown pages load their scripts, styles and data from the `CS` folder, and only the `[[CarbonSteelSeries]]` report keeps that folder up to date. Leave it enabled even if you only link to the Seasons or Belchertown page. If it's switched off or failing, the realtime service still updates `realtime.json`, but the scripts and styles in the `CS` folder stay on whatever version was there before. After an upgrade, those pages then show **"Live gauges unavailable"** instead of the gauges. The installer warns if the report is switched off. If you see that notice, check the WeeWX log for errors from the CarbonSteelSeries report, and open the address the notice links to: it should be the folder that report writes. The pages ask for the gauge files by the date of the installed copy, so browsers and caches such as Cloudflare pick up new files straight after an upgrade.
+
 ### Header buttons
 
 Casual visitors won't find a page that nothing links to, so when you add the Seasons or Belchertown page the installer also puts a link in that skin's header:
@@ -241,7 +239,7 @@ Installing, upgrading or uninstalling this extension never reads, changes or rem
 
 ## Upgrading from a pre-release build
 
-If you tried a pre-release build of this project (installed as `SteelSeries` with a `user.steelseries.SteelSeriesRealtime` service, or an early v1.0.0 that used the `ss` folder), install v1.0.1 over it without uninstalling anything first. The installer recognises the earlier build by its service and skin, and moves its settings across: `[[SteelSeries]]` becomes `[[CarbonSteelSeries]]` (with your page options and units), `[SteelSeriesRealtime]` becomes `[CarbonSteelSeriesRealtime]`, and the folder moves from `ss` to `CS`. It removes the earlier build's service, `bin/user/steelseries.py`, and its `skins/ss` folder, after checking that folder's `skin.conf` belongs to this project. The original SteelSeries skin is never mistaken for it. The page address changes from `…/ss/` to `…/CS/`, and the earlier build's page folder is left in place; it stops updating.
+If you tried a pre-release build of this project (installed as `SteelSeries` with a `user.steelseries.SteelSeriesRealtime` service, or an early v1.0.0 that used the `ss` folder), install v1.0.0 over it without uninstalling anything first. The installer recognises the earlier build by its service and skin, and moves its settings across: `[[SteelSeries]]` becomes `[[CarbonSteelSeries]]` (with your page options and units), `[SteelSeriesRealtime]` becomes `[CarbonSteelSeriesRealtime]`, and the folder moves from `ss` to `CS`. It removes the earlier build's service, `bin/user/steelseries.py`, and its `skins/ss` folder, after checking that folder's `skin.conf` belongs to this project. The original SteelSeries skin is never mistaken for it. The page address changes from `…/ss/` to `…/CS/`, and the earlier build's page folder is left in place; it stops updating.
 
 ## Development
 

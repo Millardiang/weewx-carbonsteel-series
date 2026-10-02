@@ -1,0 +1,115 @@
+/* weewx-carbonsteel-series — gauges.css: the stand-alone page (colours,
+ * top bar, footer). The gauges themselves are styled in components.css. */
+
+
+:root {
+  --page-max: 1480px;           /* widest the page content (and header) gets */
+  --gutter: clamp(16px, 3vw, 32px);
+  --bg: #0f1215;
+  --panel: #171b20;
+  --panel-2: #1d2228;
+  --line: #2a3139;
+  --ink: #e8edf2;
+  --ink-2: #aab4bf;
+  --muted: #76818d;
+  --face: #12161a;
+  --face-2: #1a1f25;
+  --tick: #c9d1da;
+  --tick-minor: #56616d;
+  --bezel-a: #9aa3ac;
+  --bezel-b: #3a4148;
+  --bezel-c: #d8dde2;
+  --needle: #ff6a3d;
+  --accent: #f0a73a;
+  --range: rgba(240, 167, 58, .28);
+  --good: #3ecf8e;
+  --warn: #f0a73a;
+  --bad: #ef5b5b;
+  --lcd-bg: #0b0e11;
+  --lcd-ink: #f3f6f9;
+  --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
+  --radius: 14px;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --panel-2: #f5f7f9;
+  --line: #dde2e7;
+  --ink: #15191d;
+  --ink-2: #47515b;
+  --muted: #6f7a85;
+  --face: #fbfcfd;
+  --face-2: #eef1f4;
+  --tick: #2a3138;
+  --tick-minor: #a9b2bb;
+  --bezel-a: #b9c0c7;
+  --bezel-b: #7d868f;
+  --bezel-c: #f4f6f8;
+  --needle: #e04d22;
+  --accent: #c97a0a;
+  --range: rgba(201, 122, 10, .22);
+  --lcd-bg: #e9edf1;
+  --lcd-ink: #111518;
+  --shadow: 0 1px 2px rgba(20,30,40,.06), 0 6px 18px rgba(20,30,40,.06);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef1f4; --panel: #ffffff; --panel-2: #f5f7f9; --line: #dde2e7;
+    --ink: #15191d; --ink-2: #47515b; --muted: #6f7a85; --face: #fbfcfd; --face-2: #eef1f4;
+    --tick: #2a3138; --tick-minor: #a9b2bb; --bezel-a: #b9c0c7; --bezel-b: #7d868f; --bezel-c: #f4f6f8;
+    --needle: #e04d22; --accent: #c97a0a; --range: rgba(201, 122, 10, .22);
+    --lcd-bg: #e9edf1; --lcd-ink: #111518;
+    --shadow: 0 1px 2px rgba(20,30,40,.06), 0 6px 18px rgba(20,30,40,.06);
+    color-scheme: light;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+button { font: inherit; color: inherit; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+  grid-template-areas: "brand ticker tools";
+  align-items: center; gap: 12px 20px;
+  /* bar spans the window; its contents line up with the gauge grid below */
+  padding: 12px max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter)));
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { grid-area: brand; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand > div { min-width: 0; }
+.brand-mark { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.brand h1 { font-size: 17px; font-weight: 650; margin: 0; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub { margin: 0; color: var(--muted); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 0 14px; }
+.sub span { white-space: nowrap; }
+
+@media (max-width: 1100px) {
+  .topbar { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "brand tools" "ticker ticker"; }
+}
+
+.tools { grid-area: tools; display: flex; gap: 6px; }
+
+main { padding: var(--gutter); max-width: var(--page-max); margin: 0 auto; }
+
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; padding: 8px var(--gutter) 28px; max-width: var(--page-max); margin: 0 auto; }
+
+@media (max-width: 560px) {
+  .sub { font-size: 11.5px; gap: 0 10px; }
+}

@@ -6,13 +6,13 @@
 #    Software Foundation; either version 3 of the License, or (at your option)
 #    any later version.
 #
-#    Install with:   weectl extension install weewx-carbonsteel-series-v1.0.1.zip
+#    Install with:   weectl extension install weewx-carbonsteel-series-v1.0.0.zip
 #    Remove with:    weectl extension uninstall CarbonSteelSeries
 #
 #    The installer asks whether to show the sparklines and the "Year at a
 #    glance" calendar. To answer without prompting (scripts, --yes):
 #
-#        weectl extension install weewx-carbonsteel-series-v1.0.1.zip --yes \
+#        weectl extension install weewx-carbonsteel-series-v1.0.0.zip --yes \
 #            --sparklines=n --calendar=y
 #
 import os
@@ -23,7 +23,7 @@ import weewx
 from weeutil.weeutil import y_or_n
 from weecfg.extension import ExtensionInstaller
 
-VERSION = "1.0.1"
+VERSION = "1.0.0"
 REPORT = "CarbonSteelSeries"      # extension, report and options section name
 OLD_NAME = "SteelSeries"         # name used by the pre-release builds
 SKIN = "CS"                      # skin folder and page folder
@@ -285,7 +285,16 @@ class CarbonSteelSeriesInstaller(ExtensionInstaller):
         skin = str(seasons_report[1].get("skin", "Seasons")) if seasons_report else "Seasons"
         self._seasons_button(engine, os.path.join(engine.root_dict["SKIN_DIR"], skin, "titlebar.inc"), seasons)
 
-        self._configure_belchertown(engine, std, belchertown, unattended)
+        bt_page = self._configure_belchertown(engine, std, belchertown, unattended)
+
+        # The Seasons and Belchertown pages load their scripts, styles and data
+        # from the CS folder, which only the CarbonSteelSeries report keeps up
+        # to date. Switched off, those pages stay on old files after an upgrade.
+        if (seasons or bt_page) and str((std.get(REPORT, {}) or {}).get("enable", "true")).lower() \
+                in ("false", "no", "n", "0", "off"):
+            engine.printer.out(f"  NOTE: the [[{REPORT}]] report is switched off (enable = false). The Seasons and")
+            engine.printer.out("  Belchertown gauges pages load their scripts, styles and data from its folder, so")
+            engine.printer.out("  it must run: set enable = true, even if you don't link to its own page.")
 
         # Written straight into weewx.conf so a reinstall can change an earlier answer
         # (the normal config merge never overwrites existing values).
@@ -330,7 +339,7 @@ class CarbonSteelSeriesInstaller(ExtensionInstaller):
         # when the page is wanted; otherwise it would create a stub report.
         self["config"]["StdReport"].pop(BT_REPORT, None)
         if engine.dry_run:
-            return
+            return add
 
         if not add:
             # Take out the template file weectl just copied, and any earlier registration.
@@ -350,7 +359,7 @@ class CarbonSteelSeriesInstaller(ExtensionInstaller):
                 engine.printer.out("  removed the gauges page from Belchertown-new")
             if installed:
                 self._belchertown_menu(engine, bt_dir, False)
-            return
+            return False
 
         # Where the page (at <Belchertown>/carbonsteel/) finds the CS folder,
         # relative to the Belchertown site root.
@@ -363,6 +372,7 @@ class CarbonSteelSeriesInstaller(ExtensionInstaller):
         bt.setdefault("CheetahGenerator", {}).setdefault("ToDate", {})["carbonsteel"] = {"template": BT_PAGE}
         engine.printer.out(f"  Belchertown-new gauges page: {os.path.join(bt_root, 'carbonsteel', 'index.html')}")
         self._belchertown_menu(engine, bt_dir, True)
+        return True
 
     @staticmethod
     def _seasons_button(engine, titlebar, show):

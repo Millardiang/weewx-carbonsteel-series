@@ -1,0 +1,102 @@
+#encoding UTF-8
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>$station.location · Live gauges</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/gauges.css?v=$ss_version">
+  <link rel="stylesheet" href="css/components.css?v=$ss_version">
+  <script id="ss-config" type="application/json">$ss_config_json</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M6.8 22.5A11 11 0 1 1 25.2 22.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M16 16 L23 9" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.5" fill="var(--ink)"/></svg>
+      <div>
+        <h1 id="station-name">$station.location</h1>
+        <p class="sub" id="station-meta">
+          <span>Latitude $station.latitude[0]° $station.latitude[1]′ $station.latitude[2]</span>
+          <span>Longitude $station.longitude[0]° $station.longitude[1]′ $station.longitude[2]</span>
+          <span>Elevation $station.altitude</span>
+        </p>
+      </div>
+    </div>
+    <div class="ticker-row" id="status" data-state="connecting">
+      <span class="led" aria-hidden="true"></span>
+      <div class="lcd-bar ticker" id="ticker" aria-label="Forecast outlook">
+        <div class="ticker-track" id="ticker-track"><span id="ticker-text">Loading outlook…</span></div>
+      </div>
+      <div class="lcd-bar age" title="Seconds since the last station update">
+        <span id="age-num">–</span><small id="age-unit">seconds</small>
+      </div>
+      <span class="visually-hidden" id="status-text" role="status" aria-live="polite">Connecting…</span>
+    </div>
+    <div class="tools">
+      <div class="menu-wrap">
+        <button class="icon-btn" id="face-btn" type="button" aria-label="Gauge face colour" aria-haspopup="menu" aria-expanded="false" aria-controls="face-menu" title="Gauge face">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="6.2" fill="currentColor" opacity=".45"/><path d="M12 12 L16 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="look-menu" id="face-menu" role="menu" aria-label="Gauge face colour" hidden></div>
+      </div>
+      <div class="menu-wrap">
+        <button class="icon-btn" id="bezel-btn" type="button" aria-label="Bezel colour" aria-haspopup="menu" aria-expanded="false" aria-controls="bezel-menu" title="Bezel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="3.6"/><circle cx="12" cy="12" r="3.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/></svg>
+        </button>
+        <div class="look-menu" id="bezel-menu" role="menu" aria-label="Bezel colour" hidden></div>
+      </div>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme" title="Theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+      </button>
+      <button class="icon-btn" id="units-btn" type="button" aria-label="Units" aria-haspopup="dialog" title="Units">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="gauges" id="gauges" aria-label="Live gauges"></section>
+
+    <section class="panel" id="calendar-panel" aria-labelledby="cal-title" hidden>
+      <div class="panel-head">
+        <h2 id="cal-title">Year at a glance</h2>
+        <div class="seg" id="cal-metric" role="tablist" aria-label="Calendar measure"></div>
+      </div>
+      <div class="calendar-scroll"><div id="calendar"></div></div>
+      <div class="cal-foot"><div id="cal-legend"></div><p id="cal-summary" class="muted"></p></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>WeeWX $station.version · weewx-carbonsteel-series v$ss_version</span>
+    <span>Archive updated $current.dateTime</span>
+  </footer>
+
+  <dialog id="detail" aria-labelledby="detail-title">
+    <form method="dialog" class="detail-head">
+      <h2 id="detail-title">History</h2>
+      <button class="icon-btn" value="close" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+    <div id="detail-chart"></div>
+  </dialog>
+
+  <dialog id="units-dialog" aria-labelledby="units-title">
+    <form method="dialog">
+      <div class="detail-head"><h2 id="units-title">Display units</h2>
+        <button class="icon-btn" value="close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      </div>
+      <div id="units-form" class="units-form"></div>
+      <p class="muted small">Saved in this browser only. The station's own units are marked.</p>
+    </form>
+  </dialog>
+
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+  <script src="js/d3.min.js?v=7.9.0"></script>
+  <script src="js/gauges.js?v=$ss_version"></script>
+</body>
+</html>

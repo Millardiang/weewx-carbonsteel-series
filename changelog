@@ -1,11 +1,5 @@
 weewx-carbonsteel-series
 
-v1.0.1  (2 October 2026)
-*   Belchertown page: the Nautical unit choice is now the ICAO unit set:
-    wind in knots, pressure in hPa and cloud base in feet (cloud base was
-    in metres). The set is named 'icao' in gauges.js; Belchertown's
-    'nautical' setting maps to it, so visitors' saved choices keep working.
-
 v1.0.0  (30 September 2026)
 *   First release under the name weewx-carbonsteel-series (previously
     developed as weewx-steelseries v3). Extension, report and options section
@@ -37,6 +31,13 @@ v1.0.0  (30 September 2026)
     the same broker and topic; realtime.json still supplies the day's figures
     (read once a minute while MQTT is live) and takes over at once if MQTT
     stops. Reads weewx-mqtt packets in any unit system.
+*   Seasons and Belchertown pages show "Live gauges unavailable", with the
+    address checked, when the CS folder holds missing or older gauge files,
+    instead of a blank page, and request the gauge files by the installed
+    copy's date so caches fetch new ones after an upgrade. The installer warns
+    if the CarbonSteelSeries report, which keeps that folder current, is off.
+*   Belchertown page: the footer spans the gauge cards (Belchertown's content
+    width at each screen size) rather than the whole screen.
 *   Styles split into gauges.css (page) and components.css (gauges); embed.css
     scopes the components for pages inside other skins.
 *   Independent of the original SteelSeries Weather Gauges skin: separate

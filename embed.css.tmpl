@@ -1,0 +1,78 @@
+#errorCatcher Echo
+#encoding UTF-8
+#raw
+/* weewx-carbonsteel-series — embed.css (generated from components.css)
+ *
+ * For gauges shown inside another skin's page (Belchertown-new). Every rule
+ * is scoped to .cs-embed with CSS nesting, so nothing here affects the rest
+ * of the host page. Colours follow the host's light/dark theme and the
+ * rounded-card look of Belchertown-new's front page.
+ */
+
+@font-face {
+  font-family: "Lexend";
+  src: url("../fonts/lexend.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@keyframes led-blink { 0% { filter: brightness(1.6); } 100% { filter: brightness(1); } }
+
+.cs-embed {
+  --font: inherit;
+  --radius: 18px;
+  --panel: #fafbfd;
+  --panel-2: #eef1f5;
+  --line: rgba(15, 23, 42, 0.12);
+  --ink: #1f2328;
+  --ink-2: #444c56;
+  --muted: #6a737d;
+  --accent: #2f7ec7;
+  --shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
+}
+.dark .cs-embed, [data-bs-theme="dark"] .cs-embed {
+  --panel: #313131;
+  --panel-2: #3b3b3b;
+  --line: rgba(255, 255, 255, 0.16);
+  --ink: #e9ecef;
+  --ink-2: #c6ccd2;
+  --muted: #9aa3ab;
+  --accent: #6cb4f5;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.cs-embed {
+#end raw
+#include raw "css/components.css"
+#raw
+}
+
+/* Belchertown-style cards: rounded, softly shadowed, generous padding */
+.cs-embed {
+  & *, & *::before, & *::after { box-sizing: border-box; }
+  & button { font: inherit; color: inherit; }
+  & .cs-layout { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+  & .card {
+    background-color: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow);
+    border-radius: 18px; padding: 20px 20px 16px; color: var(--ink);
+  }
+  & .card { display: flex; flex-direction: column; margin: 0; }
+  & .card-head { min-height: 32px; margin-bottom: 4px; }
+  & .card-title { font-size: 17px; font-weight: 700; color: var(--ink); text-transform: none; letter-spacing: 0; }
+  & .gauges { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+  & .panel { background-color: var(--panel); border-radius: 18px; padding: 20px; margin-top: 0; }
+  & .panel h2 { font-size: 24px; font-weight: 700; }
+  & .icon-btn { padding: 0; line-height: 1; }
+  & dialog { color: var(--ink); }
+  & .tooltip { color: var(--ink); }
+}
+@media (max-width: 560px) {
+  .cs-embed .card, .cs-embed .panel { border-radius: 14px; padding: 12px 10px 10px; }
+  .cs-embed .panel h2 { font-size: 20px; }
+  .cs-embed .card-title { font-size: 14px; }
+  .cs-embed .gauges { gap: 12px; }
+}
+#end raw
